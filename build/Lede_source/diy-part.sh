@@ -16,16 +16,18 @@ cat >$NETIP <<-EOF
 uci set network.lan.ipaddr='192.168.2.5'                                    # IPv4 地址(openwrt后台地址)
 uci set network.lan.netmask='255.255.255.0'                                 # IPv4 子网掩码
 uci set network.lan.gateway='192.168.2.1'                                   # IPv4 网关
+uci set network.lan.broadcast='192.168.2.255'                               # IPv4 广播
 uci set network.lan.dns='192.168.2.1'                         # DNS(多个DNS要用空格分开)
 uci commit network                                                          # 不要删除跟注释,除非上面全部删除或注释掉了
 #uci set dhcp.lan.ignore='1'                                                 # 关闭DHCP功能
 #uci commit dhcp                                                             # 跟‘关闭DHCP功能’联动,同时启用或者删除跟注释
 uci set system.@system[0].hostname='OpenWrt'                            # 修改主机名称为OpenWrt-123
+sed -i 's/\/bin\/login/\/bin\/login -f root/' /etc/config/ttyd              # 设置ttyd免帐号登录，如若开启，进入OPENWRT后可能要重启一次才生效
 EOF
 
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile            # 选择argon为默认主题
 
-sed -i "s/OpenWrt /wh build in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ           # 增加个性名字 ${Author} 默认为你的github帐号
+sed -i "s/OpenWrt /wh compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ           # 增加个性名字 ${Author} 默认为你的github帐号
 
 
 sed -i 's/PATCHVER:=5.10/PATCHVER:=5.4/g' target/linux/x86/Makefile                               # x86机型,默认内核5.10，修改内核为5.4
@@ -45,3 +47,11 @@ sed -i 's/PATCHVER:=5.10/PATCHVER:=5.4/g' target/linux/x86/Makefile             
 # sed -i 's/"管理权"/"改密码"/g' `grep "管理权" -rl ./`
 # sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./`
 # sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./`
+
+cat >${GITHUB_WORKSPACE}/Clear <<-EOF
+rm -rf openwrt-x86-64-generic-kernel.bin
+rm -rf openwrt-x86-64-generic.manifest
+rm -rf openwrt-x86-64-generic-squashfs-rootfs.img.gz
+rm -rf sha256sums
+rm -rf version.buildinfo
+EOF
