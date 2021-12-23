@@ -1,10 +1,6 @@
 #
+# 请大家记住拉取的是我的 281677160/build-actions 仓库，拉取的是其他仓库有问题，别问我，我也不清楚什么问题
 #
-# 感谢p3terx大神的一键编译脚本
-# 
-# Copyright (C) 2019 P3TERX <https://p3terx.com>
-# <https://github.com/P3TERX/Actions-OpenWrt.git>
-
 # 因为SSH连接配置固件直接编译，会给github停止编译的,所以要另外触发启动编译程序
 #
 # 新注册的帐号，SSH连接服务器的时间最好不要太长，10分钟左右就退出，没设置完就再来一次或者多次应该比较好
@@ -227,6 +223,8 @@ jobs:
         echo '
         # 整理固件包时候,删除您不想要的固件或者文件,让它不需要上传到Actions空间
         cat >${GITHUB_WORKSPACE}/Clear <<-EOF
+        rm -rf config.buildinfo
+        rm -rf feeds.buildinfo
         rm -rf sha256sums
         rm -rf version.buildinfo
         EOF
