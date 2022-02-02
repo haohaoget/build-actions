@@ -51,7 +51,6 @@ sed -i 's/PATCHVER:=5.10/PATCHVER:=5.4/g' target/linux/x86/Makefile             
 cat >${GITHUB_WORKSPACE}/Clear <<-EOF
 rm -rf openwrt-x86-64-generic-kernel.bin
 rm -rf openwrt-x86-64-generic.manifest
-rm -rf openwrt-x86-64-generic-squashfs-rootfs.img.gz
 rm -rf sha256sums
 rm -rf version.buildinfo
 EOF
