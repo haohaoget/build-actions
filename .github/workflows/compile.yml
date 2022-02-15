@@ -264,7 +264,7 @@ jobs:
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
     
     - name: 整理发布信息
-      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
+      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true'
       run: |
         echo "### $(date +"%Y年%m月%d号-%H点%M分")" > update_log.txt
         curl -fsSL git.io/file-transfer | sh
