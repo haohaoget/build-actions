@@ -32,6 +32,8 @@ sed -i "s/OpenWrt /wh compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZ
 
 # sed -i 's/PATCHVER:=5.10/PATCHVER:=5.4/g' target/linux/x86/Makefile                               # x86机型,默认内核5.10，修改内核为5.4
 
+sed -i 's/src-git routing https://git.openwrt.org/feed/routing.git/src-git routing https://git.openwrt.org/feed/routing.git^a7b79a1d4fce4f443854115ee4b2ed2aafba5c06/g' package/base-files/files/bin/config_generate
+
 # K3专用，编译K3的时候只会出K3固件
 #sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
 
