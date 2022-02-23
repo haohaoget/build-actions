@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lede_opewrtR3G]
+        target: [MT7621_source]
 
         # [Lede_source,Lienol_source,Mortal_source]
 
