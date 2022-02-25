@@ -231,7 +231,6 @@ jobs:
         
         if [[ -n "$(ls -A "$GITHUB_WORKSPACE/repo/.github/workflows/compile.yml" 2>/dev/null)" ]]; then
           git rm -rf $GITHUB_WORKSPACE/repo/.github/workflows/compile.yml
-          mkdir -p .github/workflows/compile.yml
         fi
         cp -Rf $GITHUB_WORKSPACE/shangyouck/.github/workflows/compile.yml .github/workflows/compile.yml
         
