@@ -209,6 +209,8 @@ jobs:
         cd $GITHUB_WORKSPACE
         git clone -b main https://github.com/281677160/build-actions.git shangyouck
         git clone -b main https://github.com/${{github.repository}}.git repo
+        echo "QIDONG1=$(grep -A 1 'paths:' shangyouck/.github/workflows/compile.yml |awk 'NR==2' |sed 's/^[ ]*//g' |sed 's/\//\\&/g')" >> $GITHUB_ENV
+        echo "QIDONG2=- 'build\/${{matrix.target}}\/start-up\/start'" >> $GITHUB_ENV
         echo "TARGE1=$(grep 'target: \[' shangyouck/.github/workflows/compile.yml |sed 's/^[ ]*//g' |grep '^target' |cut -d '#' -f1 |sed 's/\[/\\&/' |sed 's/\]/\\&/')" >> $GITHUB_ENV
         echo "TARGE2=target: \\[${{matrix.target}}\\]" >> $GITHUB_ENV
         echo "GONGGAO1=编译${{env.CODE}}-${{env.TARGET_PROFILE}}固件" >> $GITHUB_ENV
@@ -221,6 +223,9 @@ jobs:
         
         if [[ -n "${{env.TARGE1}}" ]] && [[ -n "${{env.TARGE2}}" ]]; then
           sed -i "s/${{env.TARGE1}}/${{env.TARGE2}}/g" shangyouck/.github/workflows/compile.yml
+        fi
+        if [[ -n "${{env.QIDONG1}}" ]] && [[ -n "${{env.QIDONG2}}" ]]; then
+          sed -i "s/${{env.QIDONG1}}/${{env.QIDONG2}}/g" shangyouck/.github/workflows/compile.yml
         fi
         
         cd repo
