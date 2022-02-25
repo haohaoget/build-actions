@@ -229,8 +229,8 @@ jobs:
         fi
         cp -Rf $GITHUB_WORKSPACE/${CONFIG_FILE} build/${{matrix.target}}/${CONFIG_FILE}
         
-        if [[ -n "$(ls -A "$GITHUB_WORKSPACE/repo/.github/workflows/compile.yml" 2>/dev/null)" ]]; then
-          git rm -rf $GITHUB_WORKSPACE/repo/.github/workflows/compile.yml
+        if [[ -n "$(ls -A ".github/workflows/compile.yml" 2>/dev/null)" ]]; then
+          git rm -rf .github/workflows/compile.yml
         fi
         cp -Rf $GITHUB_WORKSPACE/shangyouck/.github/workflows/compile.yml .github/workflows/compile.yml
         
