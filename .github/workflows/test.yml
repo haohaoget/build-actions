@@ -104,7 +104,7 @@ jobs:
         elif [[ "${REPO_BRANCH}" == "master" ]]; then
           echo "ZZZ=package/lean/default-settings/files/zzz-default-settings" >> $GITHUB_ENV
           echo "CODE=Lede" >> $GITHUB_ENV
-          echo "OpenWrt_name=18.06" >> $GITHUB_ENV
+          echo "OpenWrt_name=master" >> $GITHUB_ENV
         elif [[ "${REPO_BRANCH}" == "19.07" ]]; then
           echo "ZZZ=package/default-settings/files/zzz-default-settings" >> $GITHUB_ENV
           echo "CODE=Lienol" >> $GITHUB_ENV
@@ -207,7 +207,10 @@ jobs:
       if: steps.compileop.outputs.status == 'success' && env.REPO_TOKEN
       run: |
         cd $GITHUB_WORKSPACE
+        git clone -b main https://github.com/281677160/build-actions.git shangyouck
         git clone -b main https://github.com/${{github.repository}}.git repo
+        echo "TARGE1=$(grep 'target: \[' shangyouck/.github/workflows/compile.yml |sed 's/^[ ]*//g' |grep '^target' |cut -d '#' -f1 |sed 's/\[/\\&/' |sed 's/\]/\\&/')" >> $GITHUB_ENV
+        echo "TARGE2=target: \\[${{matrix.target}}\\]" >> $GITHUB_ENV
         echo "GONGGAO1=编译${{env.CODE}}-${{env.TARGET_PROFILE}}固件" >> $GITHUB_ENV
 
     
@@ -220,7 +223,15 @@ jobs:
           git rm -rf build/${{matrix.target}}/${CONFIG_FILE}
         fi
         cp -Rf $GITHUB_WORKSPACE/${CONFIG_FILE} build/${{matrix.target}}/${CONFIG_FILE}
-
+        
+        if [[ -n "${{env.TARGE1}}" ]] && [[ -n "${{env.TARGE2}}" ]]; then
+          sed -i "s/${{env.TARGE1}}/${{env.TARGE2}}/g" shangyouck/.github/workflows/compile.yml
+        fi
+        if [[ -n "$(ls -A "$GITHUB_WORKSPACE/repo/.github/workflows/compile.yml" 2>/dev/null)" ]]; then
+          git rm -rf $GITHUB_WORKSPACE/repo/.github/workflows/compile.yml
+        fi
+        cp -Rf $GITHUB_WORKSPACE/shangyouck/.github/workflows/compile.yml .github/workflows/compile.yml
+        
         mkdir -p build/${{matrix.target}}/start-up
         echo "${{env.CODE}}于$(date +%Y年%m月%d号%H时%M分%S秒)自动触发编译${{env.TARGET_PROFILE}}固件" > build/${Modelfile}/start-up/start
         git add .
