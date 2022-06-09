@@ -18,12 +18,23 @@ uci set network.lan.netmask='255.255.255.0'                                 # IP
 uci set network.lan.gateway='192.168.2.1'                                   # IPv4 网关
 uci set network.lan.broadcast='192.168.2.255'                               # IPv4 广播
 uci set network.lan.dns='192.168.2.1'                         # DNS(多个DNS要用空格分开)
-uci commit network                                                          # 不要删除跟注释,除非上面全部删除或注释掉了
-#uci set dhcp.lan.ignore='1'                                                 # 关闭DHCP功能
-#uci commit dhcp                                                             # 跟‘关闭DHCP功能’联动,同时启用或者删除跟注释
-uci set system.@system[0].hostname='OpenWrt'                            # 修改主机名称为OpenWrt-123
-sed -i 's/\/bin\/login/\/bin\/login -f root/' /etc/config/ttyd              # 设置ttyd免帐号登录，如若开启，进入OPENWRT后可能要重启一次才生效
+uci set network.lan.delegate='1'                              # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
+uci set dhcp.@dnsmasq[0].filter_aaaa='0'                      # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
+
+
+#uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能（去掉uci前面的#生效）
+uci delete network.lan.type                                  # 旁路由去掉桥接模式（去掉uci前面的#生效）
+uci set system.@system[0].hostname='OpenWrt'              # 修改主机名称为OpenWrt-123
+uci set ttyd.@ttyd[0].command='/bin/login -f root'           # 设置ttyd免帐号登录（去掉uci前面的#生效）
+# 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
+uci set network.ipv6=interface
+uci set network.ipv6.proto='dhcpv6'
+uci set network.ipv6.ifname='@lan'
+uci set network.ipv6.reqaddress='try'
+uci set network.ipv6.reqprefix='auto'
+uci set firewall.@zone[0].network='lan ipv6'
 EOF
+
 
 #sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile            # 选择argon为默认主题
 
@@ -31,10 +42,17 @@ sed -i "s/OpenWrt /wh compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZ
 
 #sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ                                                             # 设置密码为空
 
-#sed -i 's/PATCHVER:=5.10/PATCHVER:=5.15/g' target/linux/x86/Makefile                               # x86机型,默认内核5.10，修改内核为5.15（去掉sed前面的#生效）
+# 取消路由器每天跑分任务
+sed -i "/exit 0/i\sed -i '/coremark/d' /etc/crontabs/root" "$FIN_PATH"
+
+sed -i 's/PATCHVER:=5.10/PATCHVER:=5.15/g' target/linux/x86/Makefile                               # x86机型,默认内核5.10，修改内核为5.15（去掉sed前面的#生效）
 
 # K3专用，编译K3的时候只会出K3固件
 #sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
+
+# 在线更新时，删除不想保留固件的某个文件，在EOF跟EOF之间加入删除代码，记住这里对应的是固件的文件路径，比如： rm -rf /etc/config/luci
+cat >$DELETE <<-EOF
+EOF
 
 # 修改插件名字
 # sed -i 's/"aMule设置"/"电驴下载"/g' `grep "aMule设置" -rl ./`
