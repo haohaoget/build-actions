@@ -26,8 +26,8 @@ uci set network.lan.delegate='1'                              # 去掉LAN口使�
 uci set dhcp.@dnsmasq[0].filter_aaaa='0'                      # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
 
 
-#uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能（去掉uci前面的#生效）
-uci delete network.lan.type                                  # 旁路由去掉桥接模式（去掉uci前面的#生效）
+uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能（去掉uci前面的#生效）
+#uci delete network.lan.type                                  # 旁路由去掉桥接模式（去掉uci前面的#生效）
 uci set system.@system[0].hostname='OpenWrt'              # 修改主机名称为OpenWrt-123
 uci set ttyd.@ttyd[0].command='/bin/login -f root'           # 设置ttyd免帐号登录（去掉uci前面的#生效）
 # 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
@@ -49,7 +49,7 @@ sed -i "s/OpenWrt /wh compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZ
 # 取消路由器每天跑分任务
 sed -i "/exit 0/i\sed -i '/coremark/d' /etc/crontabs/root" "$FIN_PATH"
 
-sed -i 's/PATCHVER:=5.10/PATCHVER:=5.15/g' target/linux/x86/Makefile                               # x86机型,默认内核5.10，修改内核为5.15（去掉sed前面的#生效）
+#sed -i 's/PATCHVER:=5.10/PATCHVER:=5.15/g' target/linux/x86/Makefile                               # x86机型,默认内核5.10，修改内核为5.15（去掉sed前面的#生效）
 
 # K3专用，编译K3的时候只会出K3固件
 #sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
