@@ -5,12 +5,16 @@
 # 不要一下就拉取别人一个插件包N多插件的，多了没用，增加编译错误，自己需要的才好
 # 修改IP项的EOF于EOF之间请不要插入其他扩展代码，可以删除或注释里面原本的代码
 
-# svn co https://github.com/Lienol/openwrt-luci/branches/18.06/themes
-svn co https://github.com/Lienol/openwrt-luci/trunk
-cp -r trunk/themes/luci-theme-argon-dark-mod package/lean
-cp -r trunk/themes/luci-theme-argon-light-mod package/lean
-cp -r trunk/themes/luci-theme-bootstrap-mod package/lean
-cp -r trunk/themes/luci-theme-darkmatter package/lean
+svn co https://github.com/Lienol/openwrt-luci/branches/18.06/themes
+cp -r themes/luci-theme-argon-dark-mod package/lean
+cp -r themes/luci-theme-argon-light-mod package/lean
+cp -r themes/luci-theme-bootstrap-mod package/lean
+cp -r themes/luci-theme-darkmatter package/lean
+# svn co https://github.com/Lienol/openwrt-luci/trunk
+# cp -r trunk/themes/luci-theme-argon-dark-mod package/lean
+# cp -r trunk/themes/luci-theme-argon-light-mod package/lean
+# cp -r trunk/themes/luci-theme-bootstrap-mod package/lean
+# cp -r trunk/themes/luci-theme-darkmatter package/lean
 
 cat >$NETIP <<-EOF
 uci set network.lan.ipaddr='192.168.2.4'                                    # IPv4 地址(openwrt后台地址)
